@@ -1,0 +1,6 @@
+@usedefaults
+
+h2. 0-robot Portal
+
+This portal will provide information about your 0-robot servers. To check available 0-robot connections and/or register your own see [robots|/ZRGrid/robots] page.
+

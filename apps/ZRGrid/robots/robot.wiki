@@ -1,0 +1,117 @@
+@usedefaults
+
+{{toc: start=3 | depth=2}}
+
+{% if error is defined %}
+Error : ${error}
+{% else %}
+
+@@title Robot: ${robot.name}
+
+h2. Robot: ${robot.name}
+
+{{robot}}
+* *Address*: [${robot.url}| ${robot.url}]
+* *Type*: ${robot.info.type}
+* *Number of services*: ${robot.metrics.nr_services}
+* *Repositories info*
+{% for repo, data in robot.info.repositories.items() -%}
+  ** *${repo} repository*
+    *** *Url*: [${data['url']}| ${data['url']}]
+    *** *Last push time*: {{ts: ${data['last_pushed']}}}
+{% endfor %}
+
+
+h3. Services
+
+{{datatables_use}}
+
+||Name||Template||Guid||
+{% for service in services -%}
+  |[${service.name}|/ZRGrid/service?guid=${service.guid}&rname=$$rname]| ${service.template} | ${service.guid}|
+{% else %}
+  No services available.
+{% endfor %}
+
+h3. Templates
+
+{{datatables_use}}
+||Name||UID||
+{% for template in templates -%}
+  |${template.name}| ${template.uid} |
+{% else %}
+  No templates available for selected robot.    
+{% endfor %}
+
+{% endif %}
+
+h3. Robot metrics
+
+h4. CPU (in percentage)
+
+@row clearfix
+
+@col 4
+h5. Idle time
+{{jgauge width:100 id:1 height:100 val:${robot.metrics.cpu.idle} start:0 end:100}}
+@colend
+
+@col 4
+h5. User space time
+{{jgauge width:100 id:2 height:100 val:${robot.metrics.cpu.user} start:0 end:100}}
+@colend
+
+@col 4
+h5. System time
+{{jgauge width:100 id:3 height:100 val:${robot.metrics.cpu.system} start:0 end:100}}
+@colend
+@rowend
+
+@row clearfix
+
+@col 4
+h5. I/O wait
+{{jgauge width:100 id:4 height:100 val:${robot.metrics.cpu.iowait} start:0 end:100}}
+@colend
+
+@col 4
+h5. Nice
+{{jgauge width:100 id:5 height:100 val:${robot.metrics.cpu.nice} start:0 end:100}}
+@colend
+
+@col 4
+h5. IRQ
+{{jgauge width:100 id:6 height:100 val:${robot.metrics.cpu.irq} start:0 end:100}}
+@colend
+
+@col 4
+h5. SoftIRQ
+{{jgauge width:100 id:7 height:100 val:${robot.metrics.cpu.softirq} start:0 end:100}}
+@colend
+@rowend
+
+h4. Memory
+
+@col 6
+h5. Swap Information(Total: ${robot.metrics.memory.swap_total} MB)
+{{piechart:
+
+ data: [${robot.metrics.memory.swap_total - robot.metrics.memory.swap_free}, ${robot.metrics.memory.swap_free}] 
+ legends: [Swap used, Free swap]
+ width: 350
+ height: 200
+
+ }}
+@colend
+
+@col 6
+H5. Memory Information(Total: ${robot.metrics.memory.total} MB)
+{{piechart:
+
+ data: [${robot.metrics.memory.total - robot.metrics.memory.free}, ${robot.metrics.memory.free}, ${robot.metrics.memory.cached}] 
+ legends: [Memory used, Free memory, Cache]
+ width: 350
+ height: 200
+
+ }}
+ @colend

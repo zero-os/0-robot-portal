@@ -1,0 +1,31 @@
+{{title:ZRgrid - $$page}}
+{{ApplyFlatTheme}}
+
+{{logo:/system/.files/img/green.png}}
+{{PortalsHamburgerMenu}}
+{{menu:
+Robot Portal:/zrgrid
+}}
+
+{{menuadmin:
+}}
+{{menuspaces: class:brand name:Robot%20Grid marker:$$$spaces}}
+
+@block
+@row
+
+@col 12 content
+{{breadcrumbs}}
+{content}
+
+@divend
+@divend
+
+
+{{cssstyle
+td {
+    max-width:500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;}
+}}

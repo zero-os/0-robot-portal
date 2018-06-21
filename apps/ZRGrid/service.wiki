@@ -1,0 +1,44 @@
+@usedefaults
+
+{% if error is defined %}
+Error : ${error}
+{% else %}
+
+@@title Service: ${service.name}
+
+{{breadcrumb:
+    - Robots: /ZRGrid/robots
+    - "Robot: $$rname": /ZRGrid/robot?rname=$$rname
+    - Service $$guid: /ZRGrid/service?guid=$$guid&rname=$$rname
+}}
+
+h2. Service: ${service.name}
+
+{{service}}
+|*Robot Address*| ${service.robotAddress}|
+|*Guid*| ${service.guid}|
+|*Template*| ${service.template}|
+
+h3. State
+
+{{datatables_use}}
+
+||Category||Tag||State||
+{% for cat, tags in service.states.items() -%}
+{% for tag in tags.keys() -%}
+  |${cat}| ${tag} | ${tags[tag]}|
+{% endfor %}
+{% endfor %}
+
+h3. Tasks
+
+{{datatables_use}}
+
+||Action name||Guid||Creation time||State||
+{% for task in service.tasks -%}
+  |${task.actionName}| [${task.guid}|/ZRGrid/task?tguid=${task.guid}&sguid=$$guid&rname=$$rname]| ${task.createdTime} | ${task.state} |
+{% else %}
+  No tasks currently available.
+{% endfor %}
+
+{% endif %}

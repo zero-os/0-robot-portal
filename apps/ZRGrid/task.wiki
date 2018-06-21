@@ -1,0 +1,35 @@
+@usedefaults
+
+{% if error is defined %}
+Error : ${error}
+{% else %}
+
+@@title Task: ${task.name}
+
+{{breadcrumb:
+    - Robots: /ZRGrid/robots
+    - "Robot: $$rname": /ZRGrid/robot?rname=$$rname
+    - Service $$sguid: /ZRGrid/service?guid=$$sguid&rname=$$rname
+    - Task: /ZRGrid/task?sguid=$$guid&rname=$$rname&tguid=${task.guid}
+}}
+
+h2. Task: ${task.guid}
+
+{{task}}
+|*Action name*| ${task.actionName}|
+|*Creation time*| ${task.createdTime}|
+|*State*| ${task.state}|
+|*Duration*| ${task.duration}|
+|*Result*| ${task.result}|
+
+{% if task.eco%}
+
+h2. Error condition
+
+
+{{code:
+${task.eco}
+}}
+
+{% endif %}
+{% endif %}

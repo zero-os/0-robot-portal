@@ -1,0 +1,34 @@
+@usedefault
+
+h2. Robots
+
+{{datatables_use}}
+{{action id:'action-Addrobot' class:'glyphicon glyphicon-plus margin-bottom-medium margin-left-medium' label:'Add robot'}}
+{{actions:
+- display: Add robot
+  action: /restmachine/zrobot/client/add
+  hide: true
+  input:
+    - name: name
+      label: Name
+      type: text
+      required: true
+    - name: url
+      label: Robot address
+      type: text
+      required: true
+}}
+{{robots}}
+
+{% if error is defined %}
+Error : ${error}
+{% else %}
+
+
+||Name||URL||
+{% for robot in robots -%}
+  |[${robot.name}|/ZRGrid/robot?rname=${robot.name}]| ${robot.url} |
+{% else %}
+  No robots available.    
+{% endfor %}
+{% endif %}
