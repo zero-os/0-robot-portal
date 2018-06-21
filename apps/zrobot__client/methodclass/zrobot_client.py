@@ -1,10 +1,9 @@
 from js9 import j
-from cloudbroker.actorlib.baseactor import BaseActor
 from JumpScale9Portal.portal import exceptions
 from JumpScale9Portal.portal.auth import auth
 from zerorobot.task import TaskNotFoundError
 
-class zrobot_client(BaseActor):
+class zrobot_client((j.tools.code.classGetBase()):
     def __init__(self):
         super(zrobot_client, self).__init__()
 
