@@ -2,6 +2,7 @@ from js9 import j
 from JumpScale9Portal.portal import exceptions
 from JumpScale9Portal.portal.auth import auth
 from zerorobot.task import TaskNotFoundError
+import time
 
 class zrobot_client(j.tools.code.classGetBase()):
     def __init__(self):
@@ -97,6 +98,35 @@ class zrobot_client(j.tools.code.classGetBase()):
         
         return result
 
+    def taskCallback(self, eco, **kwargs):
+        lasttime = eco['lasttime'] or time.time()
+        ecoobj = j.portal.tools.models.system.Errorcondition.objects(uniquekey=eco['uniquekey']).first()
+        if ecoobj:
+            ecoobj.update(inc__occurrences=1, errormessage=eco['errormessage'], lasttime=lasttime)
+        else:
+            j.portal.tools.models.system.Errorcondition(
+                pid=eco['pid'],
+                uniquekey=eco['uniquekey'],
+                jid=eco['jid'],
+                masterjid=eco['masterjid'],
+                appname=eco['appname'],
+                level=eco['level'],
+                type=eco['type'],
+                state=eco['state'],
+                errormessage=eco['errormessage'],
+                errormessagePub=eco['errormessagePub'],
+                category=eco['category'],
+                tags=eco['tags'],
+                code=eco['code'],
+                funcname=eco['funcname'],
+                funcfilename=eco['funcfilename'],
+                funclinenr=eco['funclinenr'],
+                backtrace=eco['_traceback'],
+                lasttime=lasttime,
+                closetime=eco['closetime'],
+                occurrences=eco['occurrences']
+            ).save()
+
     @auth(['admin'])
     def getTask(self, robotName, serviceGuid, taskGuid, **kwargs):
         self._check_zrobot(robotName)
@@ -109,6 +139,10 @@ class zrobot_client(j.tools.code.classGetBase()):
         except TaskNotFoundError:
             raise exceptions.NotFound("Couldn't find task with guid: {}".format(taskGuid))
 
+        ecoid = ''
+        if task.eco.uniquekey:
+            eco = j.portal.tools.models.system.Errorcondition.find({'uniquekey': task.eco.uniquekey})[0]
+            ecoid = str(eco.pk)
         data = {
             'actionName': task.action_name,
             'guid': task.guid,
@@ -116,7 +150,7 @@ class zrobot_client(j.tools.code.classGetBase()):
             'state': task.state,
             'duration': "{0:.8f}".format(task.duration),
             'result': task.result or '',
-            'eco': task.eco or ''
+            'ecoid': ecoid
             }
         return data
 

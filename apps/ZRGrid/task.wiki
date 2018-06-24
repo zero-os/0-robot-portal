@@ -1,10 +1,10 @@
 @usedefaults
 
 {% if error is defined %}
-Error : ${error}
+@usedefaults
+Error: ${error}
 {% else %}
 
-@@title Task: ${task.name}
 
 {{breadcrumb:
     - Robots: /ZRGrid/robots
@@ -22,14 +22,12 @@ h2. Task: ${task.guid}
 |*Duration*| ${task.duration}|
 |*Result*| ${task.result}|
 
-{% if task.eco%}
+{% if task.ecoid%}
 
 h2. Error condition
 
 
-{{code:
-${task.eco}
-}}
+Error condition can be found [here|/system/error%20condition?id=${task.ecoid}]. 
 
 {% endif %}
 {% endif %}

@@ -3,10 +3,10 @@
 {{toc: start=3 | depth=2}}
 
 {% if error is defined %}
-Error : ${error}
+Error: ${error}
 {% else %}
 
-@@title Robot: ${robot.name}
+@@title Robot: $$rname
 
 h2. Robot: ${robot.name}
 
@@ -43,75 +43,68 @@ h3. Templates
   No templates available for selected robot.    
 {% endfor %}
 
-{% endif %}
 
 h3. Robot metrics
 
-h4. CPU (in percentage)
-
 @row clearfix
-
 @col 4
-h5. Idle time
-{{jgauge width:100 id:1 height:100 val:${robot.metrics.cpu.idle} start:0 end:100}}
-@colend
-
-@col 4
-h5. User space time
-{{jgauge width:100 id:2 height:100 val:${robot.metrics.cpu.user} start:0 end:100}}
-@colend
-
-@col 4
-h5. System time
-{{jgauge width:100 id:3 height:100 val:${robot.metrics.cpu.system} start:0 end:100}}
-@colend
-@rowend
-
-@row clearfix
-
-@col 4
-h5. I/O wait
-{{jgauge width:100 id:4 height:100 val:${robot.metrics.cpu.iowait} start:0 end:100}}
-@colend
-
-@col 4
-h5. Nice
+h5.  CPU Nice level
 {{jgauge width:100 id:5 height:100 val:${robot.metrics.cpu.nice} start:0 end:100}}
 @colend
 
 @col 4
-h5. IRQ
+h5. CPU IRQ
 {{jgauge width:100 id:6 height:100 val:${robot.metrics.cpu.irq} start:0 end:100}}
 @colend
 
 @col 4
-h5. SoftIRQ
+h5. CPU SoftIRQ
 {{jgauge width:100 id:7 height:100 val:${robot.metrics.cpu.softirq} start:0 end:100}}
 @colend
 @rowend
 
-h4. Memory
+{{cssstyle
+.pierow {
+    margin-left: 38px;
+}
+}}
 
-@col 6
-h5. Swap Information(Total: ${robot.metrics.memory.swap_total} MB)
+@row clearfix pierow
+@col 4
+h5. CPU usage percentage
 {{piechart:
 
- data: [${robot.metrics.memory.swap_total - robot.metrics.memory.swap_free}, ${robot.metrics.memory.swap_free}] 
- legends: [Swap used, Free swap]
- width: 350
- height: 200
+ data: [${robot.metrics.cpu.idle}, ${robot.metrics.cpu.user}, ${robot.metrics.cpu.system}, ${robot.metrics.cpu.iowait}] 
+ legends: [Idle time, User space time, System time, I/O wait]
+ width: 220
+ height: 400
 
  }}
 @colend
 
-@col 6
-H5. Memory Information(Total: ${robot.metrics.memory.total} MB)
+
+@col 4
+h5. Swap Information(${robot.metrics.memory.swap_total} MB)
 {{piechart:
 
+ data: [${robot.metrics.memory.swap_total - robot.metrics.memory.swap_free}, ${robot.metrics.memory.swap_free}] 
+ legends: [Swap used, Free swap]
+ width: 220
+ height: 400
+
+ }}
+@colend
+
+@col 4
+H5. Memory Information(${robot.metrics.memory.total} MB)
+{{piechart:
  data: [${robot.metrics.memory.total - robot.metrics.memory.free}, ${robot.metrics.memory.free}, ${robot.metrics.memory.cached}] 
  legends: [Memory used, Free memory, Cache]
- width: 350
- height: 200
+ width: 220
+ height: 400
 
  }}
  @colend
+ @rowend
+
+ {% endif %}

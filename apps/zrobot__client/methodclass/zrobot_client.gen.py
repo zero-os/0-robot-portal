@@ -78,3 +78,11 @@ class zrobot_client(j.tools.code.classGetBase()):
         """
         #put your code here to implement this method
         raise NotImplementedError ("not implemented method listRobotTemplates")
+
+    def taskCallback(self, eco, **kwargs):
+        """
+        Handles task's eco
+        param:eco dict representing eco
+        """
+        #put your code here to implement this method
+        raise NotImplementedError ("not implemented method taskCallback")

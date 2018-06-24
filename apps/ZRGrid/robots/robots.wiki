@@ -21,7 +21,7 @@ h2. Robots
 {{robots}}
 
 {% if error is defined %}
-Error : ${error}
+Error: ${error}
 {% else %}
 
 

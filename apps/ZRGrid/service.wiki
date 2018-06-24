@@ -1,10 +1,9 @@
 @usedefaults
 
 {% if error is defined %}
-Error : ${error}
+Error: ${error}
 {% else %}
 
-@@title Service: ${service.name}
 
 {{breadcrumb:
     - Robots: /ZRGrid/robots

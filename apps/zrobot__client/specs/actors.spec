@@ -10,6 +10,12 @@
         var:name str,, name to give to the client instance
         result:bool, True if client was added
 
+    method:taskCallback
+        """
+        Handles task's eco
+        """
+        var:eco dict,, dict representing eco
+
     method:get
         """
         Returns client instance info using the name
