@@ -15,6 +15,7 @@
         Handles task's eco
         """
         var:eco dict,, dict representing eco
+        var:service str,, service guid
 
     method:get
         """

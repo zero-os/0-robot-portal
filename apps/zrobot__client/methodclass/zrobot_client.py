@@ -2,7 +2,6 @@ from js9 import j
 from JumpScale9Portal.portal import exceptions
 from JumpScale9Portal.portal.auth import auth
 from zerorobot.task import TaskNotFoundError
-import time
 
 class zrobot_client(j.tools.code.classGetBase()):
     def __init__(self):
@@ -17,7 +16,17 @@ class zrobot_client(j.tools.code.classGetBase()):
         if name in j.clients.zrobot.list():
             raise exceptions.Conflict('robot instance: {} already in the portal'.format(name))
 
-        j.clients.zrobot.new(name, data={'url': url})
+        zrobot = j.clients.zrobot.new(name, data={'url': url})
+        ctx = kwargs['ctx']
+        current_user = ctx.env['beaker.session']['user']
+        user = j.portal.tools.models.system.User.find({"name": current_user})[0]
+        if user.authkeys:
+            authkey = user.authkeys[0]
+        else:
+            authkey = j.apps.system.usermanager.addAuthkey(current_user, ctx=ctx)
+
+        portal_url = j.core.state.configGet('portal')['main']['public_url']
+        zrobot.api.robot.AddWebHook({'url': '{0}/restmachine/zrobot/client/taskCallback?authkey={1}'.format(portal_url, authkey), 'kind': 'eco'})
         return True
 
     def _zrobot_data(self, name, all_data=False):
@@ -98,8 +107,9 @@ class zrobot_client(j.tools.code.classGetBase()):
         
         return result
 
-    def taskCallback(self, eco, **kwargs):
-        lasttime = eco['lasttime'] or time.time()
+    def taskCallback(self, eco, service, **kwargs):
+        lasttime = eco['epoch']
+        appname = 'Robot service:{}'.format(service)
         ecoobj = j.portal.tools.models.system.Errorcondition.objects(uniquekey=eco['uniquekey']).first()
         if ecoobj:
             ecoobj.update(inc__occurrences=1, errormessage=eco['errormessage'], lasttime=lasttime)
@@ -109,7 +119,7 @@ class zrobot_client(j.tools.code.classGetBase()):
                 uniquekey=eco['uniquekey'],
                 jid=eco['jid'],
                 masterjid=eco['masterjid'],
-                appname=eco['appname'],
+                appname=appname,
                 level=eco['level'],
                 type=eco['type'],
                 state=eco['state'],

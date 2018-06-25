@@ -26,8 +26,8 @@ h3. State
 {% for cat, tags in service.states.items() -%}
 {% for tag in tags.keys() -%}
   |${cat}| ${tag} | ${tags[tag]}|
-{% endfor %}
-{% endfor %}
+{% endfor -%}
+{% endfor -%}
 
 h3. Tasks
 
