@@ -27,6 +27,8 @@ h3. State
 {% for tag in tags.keys() -%}
   |${cat}| ${tag} | ${tags[tag]}|
 {% endfor -%}
+{% else %}
+  No state information currently available
 {% endfor -%}
 
 h3. Tasks
