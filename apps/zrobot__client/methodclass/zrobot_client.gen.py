@@ -23,6 +23,15 @@ class zrobot_client(j.tools.code.classGetBase()):
         #put your code here to implement this method
         raise NotImplementedError ("not implemented method add")
 
+    def delete(self, name, **kwargs):
+        """
+        Delete client instance
+        param:name name of the client instance
+        result bool,
+        """
+        #put your code here to implement this method
+        raise NotImplementedError ("not implemented method delete")
+
     def get(self, name, **kwargs):
         """
         Returns client instance info using the name
@@ -41,6 +50,16 @@ class zrobot_client(j.tools.code.classGetBase()):
         """
         #put your code here to implement this method
         raise NotImplementedError ("not implemented method getService")
+
+    def getServiceLogs(self, robotName, guid, **kwargs):
+        """
+        Returns service logs
+        param:robotName name of the client instance
+        param:guid service guid
+        result dict,
+        """
+        #put your code here to implement this method
+        raise NotImplementedError ("not implemented method getServiceLogs")
 
     def getTask(self, robotName, serviceGuid, taskGuid, **kwargs):
         """

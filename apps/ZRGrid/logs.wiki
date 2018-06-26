@@ -1,0 +1,26 @@
+@usedefaults
+
+{% if error is defined %}
+@usedefaults
+Error: ${error}
+{% else %}
+
+
+{{breadcrumb:
+    - Robots: /ZRGrid/robots
+    - "Robot: $$rname": /ZRGrid/robot?rname=$$rname
+    - Service $$guid: /ZRGrid/service?guid=$$sguid&rname=$$rname
+    - Logs: 
+}}
+
+h2. Service logs
+
+{{logs}}
+|*Service*| [$$guid | /ZRGrid/service?guid=$$guid&rname=$$rname]|
+|*Robot*| [$$rname | /ZRGrid/robot?rname=$$rname]|
+
+{{code:
+${logs.data}
+}}
+
+{% endif %}

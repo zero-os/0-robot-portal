@@ -40,4 +40,9 @@ h3. Tasks
   No tasks currently available.
 {% endfor %}
 
+h3. Logs
+
+Service logs can be found [here| /ZRGrid/logs?guid=${service.guid}&rname=$$rname].
+
+
 {% endif %}

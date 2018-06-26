@@ -17,6 +17,13 @@
         var:eco dict,, dict representing eco
         var:service str,, service guid
 
+    method:delete
+        """
+        Delete client instance
+        """
+        var:name str,, name of the client instance
+        result:bool,
+
     method:get
         """
         Returns client instance info using the name
@@ -31,6 +38,14 @@
         var:robotName str,, name of the client instance
         var:guid str,, service guid
         result:dict, dict with service info
+
+    method:getServiceLogs
+        """
+        Returns service logs
+        """
+        var:robotName str,, name of the client instance
+        var:guid str,, service guid
+        result:dict, dict with logs data
 
     method:getTask
         """

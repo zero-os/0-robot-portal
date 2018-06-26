@@ -1,10 +1,10 @@
 from JumpScale9Portal.portal import exceptions
 def main(j, args, params, tags, tasklet):
     robot_name = args.requestContext.params.get('rname')
-    guid = args.requestContext.params.get('guid')
+    service_guid = args.requestContext.params.get('guid')
     try:
-        service = j.apps.zrobot.client.getService(robot_name, guid)
-        args.doc.applyTemplate({'service': service})
+        logs = j.apps.zrobot.client.getServiceLogs(robot_name, service_guid)
+        args.doc.applyTemplate({'logs': logs})
     except exceptions.BaseError as e:
         args.doc.applyTemplate({'error': str(e)})
 

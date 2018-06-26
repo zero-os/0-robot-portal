@@ -53,6 +53,8 @@ class zrobot_client(j.tools.code.classGetBase()):
 
     @auth(['admin'])
     def list(self, **kwargs):
+        if not j.core.state.configGetFromDict("myconfig", "path", ''):
+            raise exceptions.BadRequest("Please setup config manager before using the portal")
         results = []
         for instance in j.clients.zrobot.list():
             results.append(self._zrobot_data(instance))
@@ -62,6 +64,11 @@ class zrobot_client(j.tools.code.classGetBase()):
     def get(self, name, **kwargs):
         self._check_zrobot(name)
         return self._zrobot_data(name, True)
+
+    @auth(['admin'])
+    def delete(self, name, **kwargs):
+        j.clients.zrobot.delete(name)
+        return True
 
     @auth(['admin'])
     def listRobotServices(self, name, **kwargs):
@@ -77,14 +84,18 @@ class zrobot_client(j.tools.code.classGetBase()):
             results.append(res)
         return results
 
-    @auth(['admin'])
-    def getService(self, robotName, guid,**kwargs):
+    def _get_service(self, robotName, guid):
         self._check_zrobot(robotName)
-        robot_url = self._zrobot_data(robotName)['url']
         zrobot_api = j.clients.zrobot.robots[robotName]
         if guid not in zrobot_api.services.guids:
             raise exceptions.NotFound("Couldn't find service with guid: {}".format(guid))
         service = zrobot_api.services.guids[guid]
+        return service
+
+    @auth(['admin'])
+    def getService(self, robotName, guid,**kwargs):
+        robot_url = self._zrobot_data(robotName)['url']
+        service = self._get_service(robotName, guid)
         task_list = service.task_list
         tasks_data = []
         for task in task_list.list_tasks(all=True):
@@ -102,10 +113,22 @@ class zrobot_client(j.tools.code.classGetBase()):
             'template': str(service.template_uid),
             'tasks': tasks_data,
             'states': service.state.categories,
-            'robotAddress': robot_url
+            'robotAddress': robot_url,
         }
         
         return result
+
+    @auth(['admin'])
+    def getServiceLogs(self, robotName, guid, **kwargs):
+        service = self._get_service(robotName, guid)
+        try:
+            service_logs = service.logs
+        except RuntimeError as e:
+            raise exceptions.Unauthorized(str(e))
+        logs = {
+            'data': service_logs
+        }
+        return logs
 
     def taskCallback(self, eco, service, **kwargs):
         lasttime = eco['epoch']
@@ -139,11 +162,7 @@ class zrobot_client(j.tools.code.classGetBase()):
 
     @auth(['admin'])
     def getTask(self, robotName, serviceGuid, taskGuid, **kwargs):
-        self._check_zrobot(robotName)
-        zrobot_api = j.clients.zrobot.robots[robotName]
-        if serviceGuid not in zrobot_api.services.guids:
-            raise exceptions.NotFound("Couldn't find service with guid: {}".format(serviceGuid))
-        service = zrobot_api.services.guids[serviceGuid]
+        service = self._get_service(robotName, serviceGuid)
         try:
             task = service.task_list.get_task_by_guid(taskGuid)
         except TaskNotFoundError:

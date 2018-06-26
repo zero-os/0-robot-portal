@@ -1,7 +1,5 @@
 @usedefaults
 
-{{toc: start=3 | depth=2}}
-
 {% if error is defined %}
 Error: ${error}
 {% else %}
@@ -9,8 +7,16 @@ Error: ${error}
 @@title Robot: $$rname
 
 h2. Robot: ${robot.name}
-
 {{robot}}
+
+{{toc: start=3 | depth=2}}
+
+{{actions:
+- display: Delete
+  action: /restmachine/zrobot/client/delete?name=$$rname
+  navigateback: true
+}}
+
 * *Address*: [${robot.url}| ${robot.url}]
 * *Type*: ${robot.info.type}
 * *Number of services*: ${robot.metrics.nr_services}

@@ -1,3 +1,4 @@
+from JumpScale9Portal.portal import exceptions
 def main(j, args, params, tags, tasklet):
     robot_name = args.requestContext.params.get('rname')
     try:
@@ -7,7 +8,7 @@ def main(j, args, params, tags, tasklet):
         args.doc.applyTemplate({'robot': robot, 
                                 'services': services, 
                                 'templates': templates})
-    except Exception as e:
+    except exceptions.BaseError as e:
         args.doc.applyTemplate({'error': str(e)})
 
     params.result = (args.doc, args.doc)
