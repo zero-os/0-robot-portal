@@ -4,6 +4,8 @@ The repo provides a tool for visualizing [0-robot](https://github.com/zero-os/0-
 
 It allows registration of robot connections that can then be explored using the portal.
 
+## Prerequisites
+
 It is built on top of [portal9](https://github.com/Jumpscale/portal9/) and needs portal9 as well as [jumpscale](https://github.com/Jumpscale/core9/).
 
 Follow the instructions [here](https://github.com/Jumpscale/bash/) to have a running installation. And the instructions here to install [0-robot](https://github.com/zero-os/0-robot/blob/master/docs/getting_started.md).

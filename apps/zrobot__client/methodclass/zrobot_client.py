@@ -3,6 +3,7 @@ from JumpScale9Portal.portal import exceptions
 from JumpScale9Portal.portal.exceptions import catcherrors
 from JumpScale9Portal.portal.auth import auth
 from zerorobot.task import TaskNotFoundError
+import requests
 
 
 class zrobot_client(j.tools.code.classGetBase()):
@@ -29,7 +30,11 @@ class zrobot_client(j.tools.code.classGetBase()):
             authkey = j.apps.system.usermanager.addAuthkey(current_user, ctx=ctx)
 
         portal_url = j.core.state.configGet('portal')['main']['public_url']
-        zrobot.api.robot.AddWebHook({'url': '{0}/restmachine/zrobot/client/taskCallback?authkey={1}'.format(portal_url, authkey), 'kind': 'eco'})
+        try:
+            zrobot.api.robot.AddWebHook({'url': '{0}/restmachine/zrobot/client/taskCallback?authkey={1}'.format(portal_url, authkey), 'kind': 'eco'})
+        except (requests.exceptions.ConnectionError, ConnectionError):
+            j.clients.zrobot.delete(name)
+            raise
         return True
 
     def _zrobot_data(self, name, all_data=False):

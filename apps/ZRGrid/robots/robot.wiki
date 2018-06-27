@@ -1,5 +1,11 @@
 @usedefaults
 
+{{actions:
+- display: Delete
+  action: /restmachine/zrobot/client/delete?name=$$rname
+  navigateback: true
+}}
+
 {% if error is defined %}
 Error: ${error}
 {% else %}
@@ -10,12 +16,6 @@ h2. Robot: ${robot.name}
 {{robot}}
 
 {{toc: start=3 | depth=2}}
-
-{{actions:
-- display: Delete
-  action: /restmachine/zrobot/client/delete?name=$$rname
-  navigateback: true
-}}
 
 * *Address*: [${robot.url}| ${robot.url}]
 * *Type*: ${robot.info.type}
