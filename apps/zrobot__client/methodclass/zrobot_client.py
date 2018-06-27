@@ -1,7 +1,9 @@
 from js9 import j
 from JumpScale9Portal.portal import exceptions
+from JumpScale9Portal.portal.exceptions import catcherrors
 from JumpScale9Portal.portal.auth import auth
 from zerorobot.task import TaskNotFoundError
+
 
 class zrobot_client(j.tools.code.classGetBase()):
     def __init__(self):
@@ -12,6 +14,7 @@ class zrobot_client(j.tools.code.classGetBase()):
             raise exceptions.NotFound("Couldn't find robot instance: {}".format(name))
 
     @auth(['admin'])
+    @catcherrors(msg='')
     def add(self, url, name, **kwargs):
         if name in j.clients.zrobot.list():
             raise exceptions.Conflict('robot instance: {} already in the portal'.format(name))
@@ -52,6 +55,7 @@ class zrobot_client(j.tools.code.classGetBase()):
         return result
 
     @auth(['admin'])
+    @catcherrors(msg='')
     def list(self, **kwargs):
         if not j.core.state.configGetFromDict("myconfig", "path", ''):
             raise exceptions.BadRequest("Please setup config manager before using the portal")
@@ -61,16 +65,19 @@ class zrobot_client(j.tools.code.classGetBase()):
         return results
 
     @auth(['admin'])
+    @catcherrors(msg='')
     def get(self, name, **kwargs):
         self._check_zrobot(name)
         return self._zrobot_data(name, True)
 
     @auth(['admin'])
+    @catcherrors(msg='')
     def delete(self, name, **kwargs):
         j.clients.zrobot.delete(name)
         return True
 
     @auth(['admin'])
+    @catcherrors(msg='')
     def listRobotServices(self, name, **kwargs):
         self._check_zrobot(name)
         zrobot_api = j.clients.zrobot.robots[name]
@@ -93,6 +100,7 @@ class zrobot_client(j.tools.code.classGetBase()):
         return service
 
     @auth(['admin'])
+    @catcherrors(msg='')
     def getService(self, robotName, guid,**kwargs):
         robot_url = self._zrobot_data(robotName)['url']
         service = self._get_service(robotName, guid)
@@ -119,6 +127,7 @@ class zrobot_client(j.tools.code.classGetBase()):
         return result
 
     @auth(['admin'])
+    @catcherrors(msg='')
     def getServiceLogs(self, robotName, guid, **kwargs):
         service = self._get_service(robotName, guid)
         try:
@@ -161,6 +170,7 @@ class zrobot_client(j.tools.code.classGetBase()):
             ).save()
 
     @auth(['admin'])
+    @catcherrors(msg='')
     def getTask(self, robotName, serviceGuid, taskGuid, **kwargs):
         service = self._get_service(robotName, serviceGuid)
         try:
@@ -169,7 +179,7 @@ class zrobot_client(j.tools.code.classGetBase()):
             raise exceptions.NotFound("Couldn't find task with guid: {}".format(taskGuid))
 
         ecoid = ''
-        if task.eco.uniquekey:
+        if task.eco:
             eco = j.portal.tools.models.system.Errorcondition.find({'uniquekey': task.eco.uniquekey})[0]
             ecoid = str(eco.pk)
         data = {
@@ -184,6 +194,7 @@ class zrobot_client(j.tools.code.classGetBase()):
         return data
 
     @auth(['admin'])
+    @catcherrors(msg='')
     def listRobotTemplates(self, name, **kwargs):
         self._check_zrobot(name)
         zrobot_api = j.clients.zrobot.robots[name]
