@@ -184,6 +184,7 @@ class zrobot_client(j.tools.code.classGetBase()):
             raise exceptions.NotFound("Couldn't find task with guid: {}".format(taskGuid))
 
         ecoid = ''
+        duration = "{0:.8f}".format(task.duration) if task.duration else 'Duration info not available yet.'
         if task.eco:
             eco = j.portal.tools.models.system.Errorcondition.find({'uniquekey': task.eco.uniquekey})[0]
             ecoid = str(eco.pk)
@@ -192,7 +193,7 @@ class zrobot_client(j.tools.code.classGetBase()):
             'guid': task.guid,
             'createdTime': j.data.time.epoch2HRDateTime(task.created),
             'state': task.state,
-            'duration': "{0:.8f}".format(task.duration),
+            'duration': duration,
             'result': task.result or '',
             'ecoid': ecoid
             }

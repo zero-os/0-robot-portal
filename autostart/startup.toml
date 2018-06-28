@@ -1,0 +1,9 @@
+[startup.portal]
+name = "bash"
+
+[startup.portal.args]
+script = """
+. /env.sh
+/bin/js9 'j.tools.prefab.local.db.mongodb.start()'
+/bin/python3.6 /opt/jumpscale9/apps/portals/main/portal_start.py
+"""
