@@ -17,22 +17,20 @@ class zrobot_client(j.tools.code.classGetBase()):
     @auth(['admin'])
     @catcherrors(msg='')
     def add(self, url, name, **kwargs):
+        portal_url = j.core.state.configGet('portal')['main']['public_url']
+        if not portal_url:
+            raise exceptions.BadRequest('portal_url not configured in js9 portal config')
         if name in j.clients.zrobot.list():
             raise exceptions.Conflict('robot instance: {} already in the portal'.format(name))
 
         zrobot = j.clients.zrobot.new(name, data={'url': url})
         ctx = kwargs['ctx']
-        current_user = ctx.env['beaker.session']['user']
-        user = j.portal.tools.models.system.User.find({"name": current_user})[0]
-        if user.authkeys:
-            authkey = user.authkeys[0]
-        else:
-            authkey = j.apps.system.usermanager.addAuthkey(current_user, ctx=ctx)
+        authkey = j.apps.system.usermanager.addAuthkey('robot', name, ctx=ctx)
 
-        portal_url = j.core.state.configGet('portal')['main']['public_url']
         try:
             zrobot.api.robot.AddWebHook({'url': '{0}/restmachine/zrobot/client/taskCallback?authkey={1}'.format(portal_url, authkey), 'kind': 'eco'})
         except (requests.exceptions.ConnectionError, ConnectionError):
+            j.apps.system.usermanager.deleteAuthkey('robot', name, ctx=ctx)
             j.clients.zrobot.delete(name)
             raise
         return True
