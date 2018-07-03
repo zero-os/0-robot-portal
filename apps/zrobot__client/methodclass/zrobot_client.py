@@ -14,12 +14,15 @@ class zrobot_client(j.tools.code.classGetBase()):
         if name not in j.clients.zrobot.list():
             raise exceptions.NotFound("Couldn't find robot instance: {}".format(name))
 
+    @property
+    def portal_url(self):
+        return j.core.state.configGet('portal')['main']['public_url']
+
     @auth(['admin'])
     @catcherrors(msg='')
     def add(self, url, name, **kwargs):
-        portal_url = j.core.state.configGet('portal')['main']['public_url']
-        if not portal_url:
-            raise exceptions.BadRequest('portal_url not configured in js9 portal config')
+        if not self.portal_url:
+            raise exceptions.BadRequest('portal_url not configured in js9 portal config.')
         if name in j.clients.zrobot.list():
             raise exceptions.Conflict('robot instance: {} already in the portal'.format(name))
 
@@ -61,7 +64,7 @@ class zrobot_client(j.tools.code.classGetBase()):
     @catcherrors(msg='')
     def list(self, **kwargs):
         if not j.core.state.configGetFromDict("myconfig", "path", ''):
-            raise exceptions.BadRequest("Please setup config manager before using the portal")
+            raise exceptions.BadRequest("Please setup config manager before using the portal.")
         results = []
         for instance in j.clients.zrobot.list():
             results.append(self._zrobot_data(instance))
@@ -70,6 +73,8 @@ class zrobot_client(j.tools.code.classGetBase()):
     @auth(['admin'])
     @catcherrors(msg='')
     def get(self, name, **kwargs):
+        if not self.portal_url:
+            raise exceptions.BadRequest('portal_url not configured in js9 portal config.')
         self._check_zrobot(name)
         return self._zrobot_data(name, True)
 

@@ -23,7 +23,7 @@ h2. Robot: ${robot.name}
 * *Repositories info*
 {% for repo, data in robot.info.repositories.items() -%}
   ** *${repo} repository*
-    *** *Url*: [${data['url']}| ${data['url']}]
+    *** *Url*: {% if data['url'] %} [${data['url']}| ${data['url']}]  {% endif %}
     *** *Last push time*: {{ts: ${data['last_pushed']}}}
 {% endfor %}
 
