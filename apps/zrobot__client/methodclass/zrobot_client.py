@@ -31,7 +31,7 @@ class zrobot_client(j.tools.code.classGetBase()):
         authkey = j.apps.system.usermanager.addAuthkey('robot', name, ctx=ctx)
 
         try:
-            zrobot.api.robot.AddWebHook({'url': '{0}/restmachine/zrobot/client/taskCallback?authkey={1}'.format(portal_url, authkey), 'kind': 'eco'})
+            zrobot.api.robot.AddWebHook({'url': '{0}/restmachine/zrobot/client/taskCallback?authkey={1}'.format(self.portal_url, authkey), 'kind': 'eco'})
         except (requests.exceptions.ConnectionError, ConnectionError):
             j.apps.system.usermanager.deleteAuthkey('robot', name, ctx=ctx)
             j.clients.zrobot.delete(name)
@@ -81,6 +81,7 @@ class zrobot_client(j.tools.code.classGetBase()):
     @auth(['admin'])
     @catcherrors(msg='')
     def delete(self, name, **kwargs):
+        j.apps.system.usermanager.deleteAuthkey('robot', name, ctx=kwargs['ctx'])
         j.clients.zrobot.delete(name)
         return True
 
