@@ -20,13 +20,15 @@ class zrobot_client(j.tools.code.classGetBase()):
 
     @auth(['admin'])
     @catcherrors(msg='')
-    def add(self, url, name, **kwargs):
+    def add(self, url, name, godToken=None, **kwargs):
         if not self.portal_url:
             raise exceptions.BadRequest('portal_url not configured in js9 portal config.')
         if name in j.clients.zrobot.list():
             raise exceptions.Conflict('robot instance: {} already in the portal'.format(name))
 
         zrobot = j.clients.zrobot.new(name, data={'url': url})
+        if godToken:
+            zrobot.god_token_set(godToken)
         ctx = kwargs['ctx']
         authkey = j.apps.system.usermanager.addAuthkey('robot', name, ctx=ctx)
 
