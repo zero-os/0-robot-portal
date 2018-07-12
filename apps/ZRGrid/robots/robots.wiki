@@ -17,6 +17,9 @@ h2. Robots
       label: Robot address
       type: text
       required: true
+    - name: godToken
+      label: God token
+      type: text 
 }}
 {{robots}}
 
