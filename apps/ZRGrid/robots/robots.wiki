@@ -18,7 +18,7 @@ h2. Robots
       type: text
       required: true
     - name: godToken
-      label: God token
+      label: God token <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <a href="https://github.com/Jumpscale/portal9/tree/master/docs/GodToken.md" target="_blank"><i class="fa fa-question-circle"></i></a>
       type: text 
 }}
 {{robots}}
