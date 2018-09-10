@@ -128,6 +128,7 @@ class zrobot_client(j.tools.code.classGetBase()):
 
         result = {
             'name': service.name,
+            'data': service.data,
             'guid': service.guid,
             'template': str(service.template_uid),
             'tasks': tasks_data,

@@ -8,6 +8,7 @@
         """
         var:url str,, address of the 0-robot server
         var:name str,, name to give to the client instance
+        var:godToken str,, God token of the robot
         result:bool, True if client was added
 
     method:taskCallback

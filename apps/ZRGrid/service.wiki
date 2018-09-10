@@ -18,6 +18,16 @@ h2. Service: ${service.name}
 |*Guid*| ${service.guid}|
 |*Template*| ${service.template}|
 
+
+h3. Data
+
+||key||value||
+{% for key,value in service.data.data.items() -%}
+{% if value not in [[], ''] -%}
+|${key}| ${value}|
+{% endif -%}
+{% endfor %}
+
 h3. State
 
 {{datatables_use}}
