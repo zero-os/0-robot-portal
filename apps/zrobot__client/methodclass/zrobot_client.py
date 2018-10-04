@@ -152,33 +152,33 @@ class zrobot_client(j.tools.code.classGetBase()):
         return logs
 
     def taskCallback(self, eco, service, **kwargs):
-        lasttime = eco['epoch']
+        lasttime = eco['time_last']
         appname = 'Robot service:{}'.format(service)
         ecoobj = j.portal.tools.models.system.Errorcondition.objects(uniquekey=eco['uniquekey']).first()
         if ecoobj:
             ecoobj.update(inc__occurrences=1, errormessage=eco['errormessage'], lasttime=lasttime)
         else:
             j.portal.tools.models.system.Errorcondition(
-                pid=eco['pid'],
-                uniquekey=eco['uniquekey'],
-                jid=eco['jid'],
-                masterjid=eco['masterjid'],
+                pid=eco.get('pid', 0),
+                uniquekey=eco.get('uniquekey', j.data.idgenerator.generateGUID),
+                jid=eco.get('jid', 0),
+                masterjid=eco.get('masterjid', 0),
                 appname=appname,
-                level=eco['level'],
-                type=eco['type'],
-                state=eco['state'],
-                errormessage=eco['errormessage'],
-                errormessagePub=eco['errormessagePub'],
-                category=eco['category'],
-                tags=eco['tags'],
-                code=eco['code'],
-                funcname=eco['funcname'],
-                funcfilename=eco['funcfilename'],
+                level=eco.get('level', 1),
+                type=eco['type', 'DEBUG'],
+                state=eco['state', 'ERROR'],
+                errormessage=eco['message'],
+                errormessagePub=eco['message_pub'],
+                category=eco['cat'],
+                tags=eco.get('tags', ''),
+                code=eco.get('code', ''),
+                funcname=eco.get('funcname', ''),
+                funcfilename=eco.get('funcfilename', ''),
                 funclinenr=eco['funclinenr'],
-                backtrace=eco['_traceback'],
+                backtrace=eco['trace'],
                 lasttime=lasttime,
-                closetime=eco['closetime'],
-                occurrences=eco['occurrences']
+                closetime=eco.get('closetime'),
+                occurrences=eco.get('occurrences')
             ).save()
 
     @auth(['admin'])
