@@ -153,14 +153,15 @@ class zrobot_client(j.tools.code.classGetBase()):
 
     def taskCallback(self, eco, service, **kwargs):
         lasttime = eco['time_last']
+        uniquekey = j.data.hash.md5_string(eco['trace'])
         appname = 'Robot service:{}'.format(service)
-        ecoobj = j.portal.tools.models.system.Errorcondition.objects(uniquekey=eco['uniquekey']).first()
+        ecoobj = j.portal.tools.models.system.Errorcondition.objects(uniquekey=uniquekey)).first()
         if ecoobj:
-            ecoobj.update(inc__occurrences=1, errormessage=eco['errormessage'], lasttime=lasttime)
+            ecoobj.update(inc__occurrences=1, errormessage=eco['message'], lasttime=lasttime)
         else:
             j.portal.tools.models.system.Errorcondition(
                 pid=eco.get('pid', 0),
-                uniquekey=eco.get('uniquekey', j.data.idgenerator.generateGUID),
+                uniquekey=uniquekey,
                 jid=eco.get('jid', 0),
                 masterjid=eco.get('masterjid', 0),
                 appname=appname,
@@ -174,11 +175,11 @@ class zrobot_client(j.tools.code.classGetBase()):
                 code=eco.get('code', ''),
                 funcname=eco.get('funcname', ''),
                 funcfilename=eco.get('funcfilename', ''),
-                funclinenr=eco['funclinenr'],
+                funclinenr=eco.get('funclinenr', ''),
                 backtrace=eco['trace'],
                 lasttime=lasttime,
                 closetime=eco.get('closetime'),
-                occurrences=eco.get('occurrences')
+                occurrences=eco.get('count')
             ).save()
 
     @auth(['admin'])
