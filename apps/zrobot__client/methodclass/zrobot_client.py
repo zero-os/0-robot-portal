@@ -14,28 +14,19 @@ class zrobot_client(j.tools.code.classGetBase()):
         if name not in j.clients.zrobot.list():
             raise exceptions.NotFound("Couldn't find robot instance: {}".format(name))
 
-    def _debug(self, msg):
-       j.sal.fs.writeFile('/tmp/log.debug', msg + '\n', append=True)
-
     @property
     def portal_url(self):
-        self._debug('\t\tgetting portal_url')
         return j.core.state.configGet('portal')['main']['public_url']
 
     @auth(['admin'])
     @catcherrors(msg='')
     def add(self, url, name, username='', godToken=None, **kwargs):
-        self._debug('adding robot name:%s username:%s' % (name, username))
         if not self.portal_url:
             raise exceptions.BadRequest('portal_url not configured in js9 portal config.')
-        self._debug('\t\tgot portal url')
         if name in j.clients.zrobot.list():
-            self._debug('\t\tcannot list robots')
             raise exceptions.Conflict('robot instance: {} already in the portal'.format(name))
 
-        self._debug('\tcreating zrobot name:%s' % (name))
         zrobot = j.clients.zrobot.new(name, data={'url': url, 'username':username})
-        self._debug('\tcreated zrobot name:%s with data' % (name, zrobot.config.data))
         if godToken:
             zrobot.god_token_set(godToken)
         ctx = kwargs['ctx']
@@ -43,10 +34,8 @@ class zrobot_client(j.tools.code.classGetBase()):
 
         try:
             zrobot.api.robot.AddWebHook({'url': '{0}/restmachine/zrobot/client/taskCallback?authkey={1}'.format(self.portal_url, authkey), 'kind': 'eco'})
-            self._debug('\tadded zrobot name:%s webhook' % (name))
         except (requests.exceptions.ConnectionError, ConnectionError) as e:
             j.apps.system.usermanager.deleteAuthkey('robot', name, ctx=ctx)
-            self._debug('\tFAILED TO CREATE  zrobot name:%s webhook. error was:\n %s' % (name, e))
             j.clients.zrobot.delete(name)
             raise
         return True
