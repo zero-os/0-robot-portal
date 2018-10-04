@@ -13,6 +13,10 @@ h2. Robots
       label: Name
       type: text
       required: true
+    - name: username
+      label: User Name
+      type: text
+      required: true
     - name: url
       label: Robot address
       type: text
@@ -28,9 +32,9 @@ Error: ${error}
 {% else %}
 
 
-||Name||URL||
+||Robot ID||User Name||URL||
 {% for robot in robots -%}
-  |[${robot.name}|/ZRGrid/robot?rname=${robot.name}]| ${robot.url} |
+  |[${robot.name}|/ZRGrid/robot?rname=${robot.name}]| ${robot.username}| ${robot.url} |
 {% else %}
   No robots available.    
 {% endfor %}

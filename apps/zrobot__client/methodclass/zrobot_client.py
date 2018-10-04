@@ -20,13 +20,13 @@ class zrobot_client(j.tools.code.classGetBase()):
 
     @auth(['admin'])
     @catcherrors(msg='')
-    def add(self, url, name, godToken=None, **kwargs):
+    def add(self, url, name, username='', godToken=None, **kwargs):
         if not self.portal_url:
             raise exceptions.BadRequest('portal_url not configured in js9 portal config.')
         if name in j.clients.zrobot.list():
             raise exceptions.Conflict('robot instance: {} already in the portal'.format(name))
 
-        zrobot = j.clients.zrobot.new(name, data={'url': url})
+        zrobot = j.clients.zrobot.new(name, data={'url': url, 'username':username})
         if godToken:
             zrobot.god_token_set(godToken)
         ctx = kwargs['ctx']
@@ -43,7 +43,7 @@ class zrobot_client(j.tools.code.classGetBase()):
     def _zrobot_data(self, name, all_data=False):
         zrobot = j.clients.zrobot.get(name)
         data = zrobot.config.data
-        result = {'url': data['url'], 'name': zrobot.instance}
+        result = {'url': data['url'], 'username':data.get('username', 'N/A'), 'name': zrobot.instance}
         if all_data:
             metrics, _ = zrobot.api.robot.GetMetrics()
             metrics = metrics.as_dict()

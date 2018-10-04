@@ -13,11 +13,12 @@ class zrobot_client(j.tools.code.classGetBase()):
         #zrobot_client_osis.__init__(self)
 
 
-    def add(self, url, name, **kwargs):
+    def add(self, url, name, godToken, **kwargs):
         """
         Add a new 0-robot client
         param:url address of the 0-robot server
         param:name name to give to the client instance
+        param:godToken God token of the robot
         result bool,
         """
         #put your code here to implement this method
