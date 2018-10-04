@@ -155,7 +155,7 @@ class zrobot_client(j.tools.code.classGetBase()):
         lasttime = eco['time_last']
         uniquekey = j.data.hash.md5_string(eco['trace'])
         appname = 'Robot service:{}'.format(service)
-        ecoobj = j.portal.tools.models.system.Errorcondition.objects(uniquekey=uniquekey)).first()
+        ecoobj = j.portal.tools.models.system.Errorcondition.objects(uniquekey=uniquekey).first()
         if ecoobj:
             ecoobj.update(inc__occurrences=1, errormessage=eco['message'], lasttime=lasttime)
         else:
