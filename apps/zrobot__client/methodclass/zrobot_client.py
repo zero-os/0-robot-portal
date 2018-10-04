@@ -15,10 +15,11 @@ class zrobot_client(j.tools.code.classGetBase()):
             raise exceptions.NotFound("Couldn't find robot instance: {}".format(name))
 
     def _debug(self, msg):
-       j.sal.fs.writeFile('/tmp/log.debug', msg, append=True)
+       j.sal.fs.writeFile('/tmp/log.debug', msg + '\n', append=True)
 
     @property
     def portal_url(self):
+        self._debug('\t\tgetting portal_url')
         return j.core.state.configGet('portal')['main']['public_url']
 
     @auth(['admin'])
@@ -27,7 +28,9 @@ class zrobot_client(j.tools.code.classGetBase()):
         self._debug('adding robot name:%s username:%s' % (name, username))
         if not self.portal_url:
             raise exceptions.BadRequest('portal_url not configured in js9 portal config.')
+        self._debug('\t\tgot portal url')
         if name in j.clients.zrobot.list():
+            self._debug('\t\tcannot list robots')
             raise exceptions.Conflict('robot instance: {} already in the portal'.format(name))
 
         self._debug('\tcreating zrobot name:%s' % (name))
