@@ -160,8 +160,10 @@ class zrobot_client(j.tools.code.classGetBase()):
             ecoobj.update(inc__occurrences=1, errormessage=eco['message'], lasttime=lasttime)
         else:
             j.portal.tools.models.system.Errorcondition(
+                _limit=eco.get('_limit', 0),
+                _traceback=eco.get('_traceback', ""),
                 pid=eco.get('pid', 0),
-                uniquekey=uniquekey,
+                uniquekey=eco['uniquekey'],
                 jid=eco.get('jid', 0),
                 masterjid=eco.get('masterjid', 0),
                 appname=appname,
