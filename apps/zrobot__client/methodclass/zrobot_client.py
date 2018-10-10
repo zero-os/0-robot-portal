@@ -176,7 +176,7 @@ class zrobot_client(j.tools.code.classGetBase()):
                 code=eco.get('code', ''),
                 funcname=eco.get('funcname', ''),
                 funcfilename=eco.get('funcfilename', ''),
-                funclinenr=eco.get('funclinenr', ''),
+                funclinenr=eco.get('funclinenr', 0),
                 backtrace=eco['trace'],
                 lasttime=lasttime,
                 closetime=eco.get('closetime'),
