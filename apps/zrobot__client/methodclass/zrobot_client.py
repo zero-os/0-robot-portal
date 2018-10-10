@@ -152,6 +152,7 @@ class zrobot_client(j.tools.code.classGetBase()):
         return logs
 
     def taskCallback(self, eco, service, **kwargs):
+        
         lasttime = eco['time_last']
         uniquekey = j.data.hash.md5_string(eco['trace'])
         appname = 'Robot service:{}'.format(service)
@@ -163,7 +164,7 @@ class zrobot_client(j.tools.code.classGetBase()):
                 _limit=eco.get('_limit', 0),
                 _traceback=eco.get('_traceback', ""),
                 pid=eco.get('pid', 0),
-                uniquekey=eco['uniquekey'],
+                uniquekey=uniquekey,
                 jid=eco.get('jid', 0),
                 masterjid=eco.get('masterjid', 0),
                 appname=appname,
