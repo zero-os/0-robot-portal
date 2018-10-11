@@ -1,3 +1,4 @@
+import time
 from js9 import j
 from JumpScale9Portal.portal import exceptions
 from JumpScale9Portal.portal.exceptions import catcherrors
@@ -152,8 +153,7 @@ class zrobot_client(j.tools.code.classGetBase()):
         return logs
 
     def taskCallback(self, eco, service, **kwargs):
-        
-        lasttime = eco['time_last']
+        lasttime = eco.get('time_last') or time.time()
         uniquekey = j.data.hash.md5_string(eco['trace'])
         appname = 'Robot service:{}'.format(service)
         ecoobj = j.portal.tools.models.system.Errorcondition.objects(uniquekey=uniquekey).first()
