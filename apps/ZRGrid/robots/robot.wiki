@@ -17,6 +17,7 @@ h2. Robot: ${robot.name}
 
 {{toc: start=3 | depth=2}}
 
+{% if robot.username %} * *Username*: ${robot.username} {% endif %}
 * *Address*: [${robot.url}| ${robot.url}]
 * *Type*: ${robot.info.type}
 * *Number of services*: ${robot.metrics.nr_services}
