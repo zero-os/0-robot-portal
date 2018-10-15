@@ -21,12 +21,16 @@ h2. Service: ${service.name}
 
 h3. Data
 
+{% if service.data %}
 ||key||value||
 {% for key,value in service.data.data.items() -%}
 {% if value not in [[], ''] -%}
 |${key}| ${value}|
 {% endif -%}
 {% endfor %}
+{% else %}
+No service data available.
+{% endif %}
 
 h3. State
 
