@@ -155,7 +155,9 @@ class zrobot_client(j.tools.code.classGetBase()):
     def taskCallback(self, eco, service, **kwargs):
         lasttime = eco.get('time_last') or time.time()
         uniquekey = j.data.hash.md5_string(eco['trace'])
-        appname = 'Robot service:{}'.format(service)
+        ip = kwargs['ctx'].get('ip', 'unknown robot')
+        robot_id = _get_robot_id(ip)
+        appname = 'Robot: {robot_id} Robot service: {service_id}'.format(robot_id=robot_id,service_id=service)
         ecoobj = j.portal.tools.models.system.Errorcondition.objects(uniquekey=uniquekey).first()
         if ecoobj:
             ecoobj.update(inc__occurrences=1, errormessage=eco['message'], lasttime=lasttime)
@@ -223,3 +225,12 @@ class zrobot_client(j.tools.code.classGetBase()):
             results.append(res)
 
         return results
+
+
+def _get_robot_id(ip):
+    robots = j.clients.zrobot.robots
+    for r_id, r in robots.items():
+        if ip in r._client.config.data.get('url'):
+            return r_id
+
+    return ip
